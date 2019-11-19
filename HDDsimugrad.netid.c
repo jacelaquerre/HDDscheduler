@@ -7,7 +7,7 @@
 #include "HDDsimugrad.netid.h"
 
 int main() {
-    printf("Hell World");
+    printf("Hell0 World");
     return 0;
 }
 
