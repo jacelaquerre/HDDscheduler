@@ -11,3 +11,17 @@ int main() {
     return 0;
 }
 
+int addRequest(IORequestNode **listP) {
+
+}
+
+int serviceNextRequest(IORequestNode **listP, int *headPosition,
+        int *headDirection, SchedulerType schedType, int *displacement) {
+
+
+}
+
+void printRequestQueue(IORequestNode *list) {
+
+}
+
