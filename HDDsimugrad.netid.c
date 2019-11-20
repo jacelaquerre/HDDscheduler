@@ -54,8 +54,9 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
 
 void printRequestQueue(IORequestNode *list) {
     IORequestNode *node;
-    if (list == NULL)
+    if (list == NULL) {
         printf("[empty]\n");
+    }
     else {
         printf("[ ");
         node = list;
