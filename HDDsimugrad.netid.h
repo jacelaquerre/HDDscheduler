@@ -14,12 +14,12 @@ typedef enum {
 } SchedulerType;
 
 typedef struct IORequestNodeStruct {
-    int trankNum;
+    int trackNum;
     struct IORequestNodeStruct *prev;
     struct IORequestNodeStruct *next;
 } IORequestNode;
 
-int addRequest(IORequestNode **listP);
+int addRequest(IORequestNode **listP, int trackNum);
 int serviceNextRequest(IORequestNode **listP, int *headPosition,
                        int *headDirection, SchedulerType schedType, int *displacement);
 void printRequestQueue(IORequestNode *list);
