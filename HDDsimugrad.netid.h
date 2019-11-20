@@ -20,8 +20,8 @@ typedef struct IORequestNodeStruct {
 } IORequestNode;
 
 int addRequest(IORequestNode **listP, int trackNum);
-int serviceNextRequest(IORequestNode **listP, int *headPosition,
-                       int *headDirection, SchedulerType schedType, int *displacement);
+int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirection,
+                       SchedulerType schedType, int *displacement);
 void printRequestQueue(IORequestNode *list);
 
 #endif //ASSIGNMENT_6_HDDSIMUGRAD_NETID_H
