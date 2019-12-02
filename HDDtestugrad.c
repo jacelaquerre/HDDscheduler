@@ -72,9 +72,9 @@ int main() {
     numRandomVals = 25;
     maxTrackNum = 200;
 
-    schedType = SCHEDULER_FCFS;
+    //schedType = SCHEDULER_FCFS;
     //schedType = SCHEDULER_SCAN;
-    //schedType = SCHEDULER_SSTF;
+    schedType = SCHEDULER_SSTF;
 
     testOne(schedType);
     printf("\n");

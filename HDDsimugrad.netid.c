@@ -23,10 +23,10 @@ int addRequest(IORequestNode **listP, int trackNum) {
 int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirection, SchedulerType schedType, int *displacement) {
     IORequestNode *currNode, *prevNode, *nextNode;
 
-    if (schedType == SCHEDULER_FCFS) {
-        if (*listP == NULL)
-            return(-1);
+    if (*listP == NULL)
+        return(-1);
 
+    if (schedType == SCHEDULER_FCFS) {
         prevNode = NULL;
         currNode = *listP;
         // now find last node in list
@@ -39,20 +39,18 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
         if (currNode->trackNum - *headPosition > 1){
             *headDirection = 1;
         }
-        else
+        else {
             *headDirection = -1;
+        }
 
         if (prevNode == NULL) {
             // there's only one node in the list
-            free(currNode);
             *listP = NULL;
-
         } else {
-            free(currNode);
             prevNode->next = NULL;
         }
 
-
+        free(currNode);
 
         *headPosition = currNode->trackNum;
 
@@ -60,11 +58,45 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
     }
 
     if (schedType == SCHEDULER_SSTF) {
+        prevNode = NULL;
+        currNode = *listP;
+        nextNode = currNode;
 
-    }
-    if (schedType == SCHEDULER_SCAN) {
+        while (currNode != NULL) {
+            prevNode = currNode;
+            if(abs(prevNode->trackNum - *headPosition) < abs(nextNode->trackNum - *headPosition))
+                nextNode = prevNode;
+            currNode = currNode->next;
+        }
 
+        prevNode = nextNode->prev;
+        currNode = nextNode;
+
+        *displacement = abs(currNode->trackNum - *headPosition);
+        if (currNode->trackNum - *headPosition >= 1){
+            *headDirection = 1;
+        }
+        else {
+            *headDirection = -1;
+        }
+
+        if (prevNode != NULL) {
+            *listP = NULL;
+//            //prevNode->next = currNode->next;
+//            if (currNode->next != NULL)
+//                //currNode = prevNode;
+        }else {
+            *listP = currNode->next;
+        }
+
+        free(currNode);
+
+        *headPosition = nextNode->trackNum;
+        return(nextNode->trackNum);
     }
+//    if (schedType == SCHEDULER_SCAN) {
+//
+//    }
     return 0;
 }
 // Return next track to be serviced
