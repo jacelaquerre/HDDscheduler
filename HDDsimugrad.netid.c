@@ -56,19 +56,22 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
     }
 
     if (schedType == SCHEDULER_SSTF) {
+        //int headNode = 0;
         prevNode = NULL;
+        nextNode = NULL;
         currNode = *listP;
         nextNode = currNode;
 
-        while (currNode->next != NULL) {
+        while (currNode != NULL) {
             prevNode = currNode;
-            if(abs(prevNode->trackNum - *headPosition) < abs(nextNode->trackNum - *headPosition))
+            if(abs(prevNode->trackNum - *headPosition) <= abs(nextNode->trackNum - *headPosition)) {
                 nextNode = prevNode;
+            }
             currNode = currNode->next;
         }
-
         prevNode = nextNode->prev;
         currNode = nextNode;
+        nextNode = currNode->next;
 
         *displacement = abs(currNode->trackNum - *headPosition);
         if (currNode->trackNum - *headPosition >= 1){
@@ -77,12 +80,22 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
         else {
             *headDirection = -1;
         }
+        *headPosition = currNode->trackNum;
+        if (prevNode == NULL && nextNode == NULL){
+            *listP = NULL;
+        }else if (prevNode == NULL){
+            *listP = currNode->next;
+            nextNode->prev = NULL;
+        }else if(nextNode == NULL){
+            *listP = currNode->prev;
+            prevNode->next = NULL;
+        }else{
+            prevNode->next = currNode->next;
+            currNode->next->prev = prevNode;
 
-        *listP = currNode->next;
-        currNode = NULL;
+        }
 
-        *headPosition = nextNode->trackNum;
-        return(nextNode->trackNum);
+        return(currNode->trackNum);
     }
 //    if (schedType == SCHEDULER_SCAN) {
 //

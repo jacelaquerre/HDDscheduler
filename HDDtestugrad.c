@@ -76,13 +76,13 @@ int main() {
     //schedType = SCHEDULER_SCAN;
     schedType = SCHEDULER_SSTF;
 
-    testOne(schedType);
-    printf("\n");
+//    testOne(schedType);
+//    printf("\n");
     testTwo(schedType);
     printf("\n");
-    testThree(schedType);
-
-    printf("\n");
+//    testThree(schedType);
+//
+//    printf("\n");
     printf("random tests\n");
 
     getInputs(&seed, &schedType);
