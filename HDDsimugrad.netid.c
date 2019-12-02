@@ -36,12 +36,13 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
         }
 
         *displacement = abs(currNode->trackNum - *headPosition);
-        if (currNode->trackNum - *headPosition > 1){
+        if ((currNode->trackNum - *headPosition) >= 1){
             *headDirection = 1;
         }
         else {
             *headDirection = -1;
         }
+        *headPosition = currNode->trackNum;
 
         if (prevNode == NULL) {
             // there's only one node in the list
@@ -49,10 +50,7 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
         } else {
             prevNode->next = NULL;
         }
-
-        free(currNode);
-
-        *headPosition = currNode->trackNum;
+        //free(currNode);
 
         return(currNode->trackNum);
     }
@@ -62,7 +60,7 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
         currNode = *listP;
         nextNode = currNode;
 
-        while (currNode != NULL) {
+        while (currNode->next != NULL) {
             prevNode = currNode;
             if(abs(prevNode->trackNum - *headPosition) < abs(nextNode->trackNum - *headPosition))
                 nextNode = prevNode;
@@ -80,16 +78,8 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
             *headDirection = -1;
         }
 
-        if (prevNode != NULL) {
-            *listP = NULL;
-//            //prevNode->next = currNode->next;
-//            if (currNode->next != NULL)
-//                //currNode = prevNode;
-        }else {
-            *listP = currNode->next;
-        }
-
-        free(currNode);
+        *listP = currNode->next;
+        currNode = NULL;
 
         *headPosition = nextNode->trackNum;
         return(nextNode->trackNum);
