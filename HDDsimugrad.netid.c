@@ -164,15 +164,15 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
     ////////////////////////////////////////////////////
     if (schedType == SCHEDULER_SCAN) {
         prevNode = NULL;
-        //smallNode = NULL;
+        smallNode = NULL;
         currNode = *listP;
-        //smallNode = currNode;
-        int headPos = *headPosition;
+        smallNode = currNode;
 
         if (*headDirection == 1) {
             while (currNode != NULL) {
                 prevNode = currNode;
                 if (prevNode->trackNum > *headPosition) {
+                    smallNode = prevNode;
                     if (abs(prevNode->trackNum - *headPosition) <= abs(smallNode->trackNum - *headPosition)) {
                         smallNode = prevNode;
                     }
@@ -229,7 +229,6 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
         }
         return(currNode->trackNum);
     }
-
 }
 // Return next track to be serviced
 void printRequestQueue(IORequestNode *list) {
