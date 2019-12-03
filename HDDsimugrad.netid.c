@@ -27,7 +27,7 @@ int main() {
     numRequests = 10;
 
     headPosition = 48;
-    headDirection = -1;
+    headDirection = 1;
 
     requestQueue = NULL;
 
