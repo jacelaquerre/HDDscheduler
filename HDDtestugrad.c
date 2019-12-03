@@ -73,8 +73,8 @@ int main() {
     maxTrackNum = 200;
 
     //schedType = SCHEDULER_FCFS;
-    //schedType = SCHEDULER_SCAN;
-    schedType = SCHEDULER_SSTF;
+    schedType = SCHEDULER_SCAN;
+    //schedType = SCHEDULER_SSTF;
 
     testOne(schedType);
     printf("\n");
