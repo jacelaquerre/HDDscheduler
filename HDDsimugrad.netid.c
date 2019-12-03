@@ -6,61 +6,6 @@
 #include <stdlib.h>
 #include "HDDsimugrad.netid.h"
 
-int main() {
-    IORequestNode *requestQueue;
-    SchedulerType schedType = SCHEDULER_SSTF;
-    int i, trackNum, headPosition, headDirection, displacement;
-    int displacementTotal;
-    int requests[200];
-    int numRequests;
-
-    requests[0] = 5;
-    requests[1] = 3;
-    requests[2] = 7;
-    requests[3] = 2;
-    numRequests = 4;
-
-    requestQueue = NULL;
-
-    headPosition = 0;
-    headDirection = 1;
-
-    for (i=0; i<numRequests; ++i)
-        addRequest(&requestQueue, requests[i]);
-
-    printRequestQueue(requestQueue);
-    printf("head position = %d; head direction = %d\n",
-           headPosition, headDirection);
-
-    if (schedType == SCHEDULER_SSTF)
-        printf("SSTF: order of these should be 2 - 3 - 5 - 7\n");
-    else if (schedType == SCHEDULER_FCFS)
-        printf("FCFS: order of these should be 5 - 3 - 7 - 2\n");
-    else if (schedType == SCHEDULER_SCAN)
-        printf("SCAN: order of these should be 2 - 3 - 5 - 7\n");
-
-    displacementTotal = 0;
-
-    trackNum = serviceNextRequest(&requestQueue, &headPosition,
-                                  &headDirection, schedType, &displacement);
-    while (trackNum >= 0) {
-        displacementTotal = displacementTotal + displacement;
-        printf("next request: %d; displacement = %d; pos = %d  dir = %d\n",
-               trackNum, displacement, headPosition, headDirection);
-        trackNum = serviceNextRequest(&requestQueue, &headPosition,
-                                      &headDirection, schedType, &displacement);
-    }
-
-    if (schedType == SCHEDULER_SSTF)
-        printf("total displacement should be 7; value is %d\n", displacementTotal);
-    else if (schedType == SCHEDULER_FCFS)
-        printf("total displacement should be 16; value is %d\n", displacementTotal);
-    else if (schedType == SCHEDULER_SCAN)
-        printf("total displacement should be 7; value is %d\n", displacementTotal);
-
-    return(0);
-
-}
 int addRequest(IORequestNode **listP, int trackNum) {
     IORequestNode *currNode, *prevNode, *newNode;
 
@@ -115,40 +60,38 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
         prevNode = NULL;
         nextNode = NULL;
         currNode = *listP;
-        nextNode = currNode;
+        smallNode = currNode;
 
         while (currNode != NULL) {
             prevNode = currNode;
-            if(abs(prevNode->trackNum - *headPosition) <= abs(nextNode->trackNum - *headPosition)) {
-                nextNode = prevNode;
+            if(abs(prevNode->trackNum - *headPosition) <= abs(smallNode->trackNum - *headPosition)) {
+                smallNode = prevNode;
             }
             currNode = currNode->next;
         }
-        prevNode = nextNode->prev;
-        currNode = nextNode;
+        prevNode = smallNode->prev;
+        currNode = smallNode;
         nextNode = currNode->next;
 
         *displacement = abs(currNode->trackNum - *headPosition);
         if (currNode->trackNum - *headPosition >= 1) {
             *headDirection = 1;
-
         }
         else {
             *headDirection = -1;
         }
         *headPosition = currNode->trackNum;
+
         if (prevNode == NULL && nextNode == NULL){
             *listP = NULL;
         }else if (prevNode == NULL){
             *listP = currNode->next;
             nextNode->prev = NULL;
         }else if(nextNode == NULL){
-            *listP = currNode->prev;
             prevNode->next = NULL;
         }else{
             prevNode->next = currNode->next;
             currNode->next->prev = prevNode;
-
         }
 
         return(currNode->trackNum);
