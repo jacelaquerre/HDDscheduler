@@ -171,7 +171,7 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
         if (*headDirection == 1) {
             while (currNode != NULL) {
                 prevNode = currNode;
-                if (prevNode->trackNum > *headPosition) {
+                if (prevNode->trackNum >= *headPosition) {
                     smallNode = prevNode;
                     if (abs(prevNode->trackNum - *headPosition) <= abs(smallNode->trackNum - *headPosition)) {
                         smallNode = prevNode;
@@ -179,6 +179,14 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
                 }
                 currNode = currNode->next;
             }
+            if (smallNode->trackNum < *headPosition) {
+                *headDirection = -1;
+                smallNode = prevNode;
+                if (abs(prevNode->trackNum - *headPosition) > abs(smallNode->trackNum - *headPosition)) {
+                    smallNode = prevNode;
+                }
+            }
+            //currNode = currNode->next;
             prevNode = smallNode->prev;
             currNode = smallNode;
             nextNode = currNode->next;
