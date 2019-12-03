@@ -204,8 +204,10 @@ int testTwo(SchedulerType schedType) {
         displacementTotal = displacementTotal + displacement;
         printf("next request: %d; displacement = %d; pos = %d  dir = %d\n",
                trackNum, displacement, headPosition, headDirection);
+        //printRequestQueue(requestQueue);
         trackNum = serviceNextRequest(&requestQueue, &headPosition,
                                       &headDirection, schedType, &displacement);
+
     }
 
     if (schedType == SCHEDULER_SSTF)
