@@ -65,7 +65,6 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
         while (currNode != NULL) {
             prevNode = currNode;
             if(abs(prevNode->trackNum - *headPosition) <= abs(smallNode->trackNum - *headPosition)) {
-
                 smallNode = prevNode;
             }
             currNode = currNode->next;
