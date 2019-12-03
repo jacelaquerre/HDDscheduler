@@ -193,11 +193,35 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
                 prevNode->next = currNode->next;
                 currNode->next->prev = prevNode;
             }
-
         }
         else if (*headDirection == -1) {
+            while (currNode != NULL) {
+                prevNode = currNode;
+                if(abs(prevNode->trackNum - *headPosition) <= abs(smallNode->trackNum - *headPosition)) {
+                    smallNode = prevNode;
+                }
+                currNode = currNode->next;
+            }
+            prevNode = smallNode->prev;
+            currNode = smallNode;
+            nextNode = currNode->next;
 
+            *displacement = abs(currNode->trackNum - *headPosition);
+            *headPosition = currNode->trackNum;
+
+            if (prevNode == NULL && nextNode == NULL){
+                *listP = NULL;
+            }else if (prevNode == NULL){
+                *listP = currNode->next;
+                nextNode->prev = NULL;
+            }else if(nextNode == NULL){
+                prevNode->next = NULL;
+            }else{
+                prevNode->next = currNode->next;
+                currNode->next->prev = prevNode;
+            }
         }
+        return(currNode->trackNum);
     }
 }
 // Return next track to be serviced
