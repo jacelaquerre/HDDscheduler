@@ -6,6 +6,68 @@
 #include <stdlib.h>
 #include "HDDsimugrad.netid.h"
 
+int main() {
+    IORequestNode *requestQueue;
+    SchedulerType schedType = SCHEDULER_SCAN;
+    int i, trackNum, headPosition, headDirection, displacement;
+    int displacementTotal;
+    int requests[200];
+    int numRequests;
+
+    requests[0] = 50;
+    requests[1] = 57;
+    requests[2] = 47;
+    requests[3] = 39;
+    requests[4] = 65;
+    requests[5] = 10;
+    requests[6] = 150;
+    requests[7] = 15;
+    requests[8] = 160;
+    requests[9] = 1;
+    numRequests = 10;
+
+    headPosition = 48;
+    headDirection = -1;
+
+    requestQueue = NULL;
+
+    for (i=0; i<numRequests; ++i)
+        addRequest(&requestQueue, requests[i]);
+
+    printRequestQueue(requestQueue);
+    printf("head position = %d; head direction = %d\n",
+           headPosition, headDirection);
+
+    if (schedType == SCHEDULER_SSTF)
+        printf("SSTF: order of these should be 47 - 50 - 57 - 65 - 39 - 10 - 1 - 150 - 160\n");
+    else if (schedType == SCHEDULER_FCFS)
+        printf("FCFS: order of these should be 50 - 57 - 47 - 39 - 65 - 10 - 150 - 15 - 160 - 1\n");
+    else if (schedType == SCHEDULER_SCAN)
+        printf("SCAN: order of these should be 50 - 57 - 65 - 150 - 160 - 47 - 39 - 15 - 10 - 1\n");
+
+    displacementTotal = 0;
+
+    trackNum = serviceNextRequest(&requestQueue, &headPosition,
+                                  &headDirection, schedType, &displacement);
+    while (trackNum >= 0) {
+        displacementTotal = displacementTotal + displacement;
+        printf("next request: %d; displacement = %d; pos = %d  dir = %d\n",
+               trackNum, displacement, headPosition, headDirection);
+        trackNum = serviceNextRequest(&requestQueue, &headPosition,
+                                      &headDirection, schedType, &displacement);
+    }
+
+    if (schedType == SCHEDULER_SSTF)
+        printf("total displacement should be 242; value is %d\n", displacementTotal);
+    else if (schedType == SCHEDULER_FCFS)
+        printf("total displacement should be 687; value is %d\n", displacementTotal);
+    else if (schedType == SCHEDULER_SCAN)
+        printf("total displacement should be 271; value is %d\n", displacementTotal);
+
+    return(0);
+}
+
+
 int addRequest(IORequestNode **listP, int trackNum) {
     IORequestNode *currNode, *prevNode, *newNode;
 
@@ -124,7 +186,7 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
                     smallNode = prevNode;
                 }
             }
-            //currNode = currNode->next;
+
             prevNode = smallNode->prev;
             currNode = smallNode;
             nextNode = currNode->next;
@@ -148,12 +210,21 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
             while (currNode != NULL) {
                 prevNode = currNode;
                 if (prevNode->trackNum <= *headPosition) {
-                    if (abs(prevNode->trackNum - *headPosition) <= abs(smallNode->trackNum - *headPosition)) {
+                    smallNode = prevNode;
+                    if (abs(prevNode->trackNum - *headPosition) >= abs(smallNode->trackNum - *headPosition)) {
                         smallNode = prevNode;
                     }
                 }
                 currNode = currNode->next;
             }
+            if (smallNode->trackNum > *headPosition) {
+                *headDirection = 1;
+                smallNode = prevNode;
+                if (abs(prevNode->trackNum - *headPosition) < abs(smallNode->trackNum - *headPosition)) {
+                    smallNode = prevNode;
+                }
+            }
+
             prevNode = smallNode->prev;
             currNode = smallNode;
             nextNode = currNode->next;
