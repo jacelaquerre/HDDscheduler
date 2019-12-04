@@ -13,12 +13,14 @@ int addRequest(IORequestNode **listP, int trackNum) {
     newNode->trackNum = trackNum;
     newNode->next = *listP;
     newNode->prev = NULL;
-    if (*listP != NULL)
+    if (*listP != NULL) {
         (*listP)->prev = newNode;
+    }
     *listP = newNode;
     return(0);
 
 }
+
 // will select and delete only one node at a time
 int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirection, SchedulerType schedType, int *displacement) {
     IORequestNode *currNode, *prevNode, *nextNode, *smallNode;
@@ -48,7 +50,8 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
         if (prevNode == NULL) {
             // there's only one node in the list
             *listP = NULL;
-        } else {
+        }
+        else {
             prevNode->next = NULL;
         }
         //free(currNode);
@@ -83,14 +86,17 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
         }
         *headPosition = currNode->trackNum;
 
-        if (prevNode == NULL && nextNode == NULL){
+        if (prevNode == NULL && nextNode == NULL) {
             *listP = NULL;
-        }else if (prevNode == NULL){
+        }
+        else if (prevNode == NULL) {
             *listP = currNode->next;
             nextNode->prev = NULL;
-        }else if(nextNode == NULL){
+        }
+        else if(nextNode == NULL) {
             prevNode->next = NULL;
-        }else{
+        }
+        else {
             prevNode->next = currNode->next;
             currNode->next->prev = prevNode;
         }
@@ -109,27 +115,22 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
             while (currNode != NULL) {
                 prevNode = currNode;
                 if (prevNode->trackNum >= *headPosition) {
-                    //printf("check tn  %d\n", prevNode->trackNum); // last is 65
-                    //printf("check headpos  %d\n", *headPosition); // last is 65
-//                    if (abs(prevNode->trackNum - *headPosition) < abs(smallNode->trackNum - *headPosition) ) { //changed
-                    if (abs(prevNode->trackNum - *headPosition) < minDist ) { //changed
+                    if (abs(prevNode->trackNum - *headPosition) < minDist ) {
                         minDist = abs(prevNode->trackNum - *headPosition);
                         smallNode = prevNode;
-                        //printf("small node tn %d\n", smallNode->trackNum); // last is 65
                     }
                 }
                 currNode = currNode->next;
             }
 
-            //Flips the head direction
+            // Flips the head direction
             if (smallNode->trackNum < *headPosition) {
-                *headDirection = 1;
+                *headDirection = -1;
                 smallNode = prevNode;
                 if (abs(prevNode->trackNum - *headPosition) < minDist) {
                     smallNode = prevNode;
                 }
             }
-
 
             prevNode = smallNode->prev;
             currNode = smallNode;
@@ -138,14 +139,17 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
             *displacement = abs(currNode->trackNum - *headPosition);
             *headPosition = currNode->trackNum;
 
-            if (prevNode == NULL && nextNode == NULL){
+            if (prevNode == NULL && nextNode == NULL) {
                 *listP = NULL;
-            }else if (prevNode == NULL){
+            }
+            else if (prevNode == NULL) {
                 *listP = currNode->next;
                 nextNode->prev = NULL;
-            }else if(nextNode == NULL){
+            }
+            else if (nextNode == NULL) {
                 prevNode->next = NULL;
-            }else{
+            }
+            else {
                 prevNode->next = currNode->next;
                 currNode->next->prev = prevNode;
             }
@@ -162,7 +166,7 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
                 currNode = currNode->next;
             }
 
-            //Flips the head direction
+            // Flips the head direction
             if (smallNode->trackNum > *headPosition) {
                 *headDirection = 1;
                 smallNode = prevNode;
@@ -178,14 +182,17 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
             *displacement = abs(currNode->trackNum - *headPosition);
             *headPosition = currNode->trackNum;
 
-            if (prevNode == NULL && nextNode == NULL){
+            if (prevNode == NULL && nextNode == NULL) {
                 *listP = NULL;
-            }else if (prevNode == NULL){
+            }
+            else if (prevNode == NULL) {
                 *listP = currNode->next;
                 nextNode->prev = NULL;
-            }else if(nextNode == NULL){
+            }
+            else if (nextNode == NULL) {
                 prevNode->next = NULL;
-            }else{
+            }
+            else {
                 prevNode->next = currNode->next;
                 currNode->next->prev = prevNode;
             }
@@ -193,6 +200,7 @@ int serviceNextRequest(IORequestNode **listP, int *headPosition, int *headDirect
         return(currNode->trackNum);
     }
 }
+
 // Return next track to be serviced
 void printRequestQueue(IORequestNode *list) {
     IORequestNode *node;
