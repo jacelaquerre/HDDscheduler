@@ -6,5 +6,5 @@ Created by:
 Jace Laquerre,
 Matt Zahar
 
-Some Code taken from instructor:
+Some code taken from instructor:
 Jason Hibbler
