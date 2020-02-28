@@ -1,5 +1,5 @@
 //
-// Created by jacel on 11/19/2019.
+// Created by Professor Jason Hibbler (UVM)
 //
 
 #include <stdio.h>
